@@ -1,0 +1,15 @@
+<root version="3.0">
+	<properties>
+	<name>Tests</name>
+	<version>0.00</version>
+	
+	<author>Wilhelm Neubert</author>
+	<description>Basic Tests for Savage Worlds</description>
+	<ruleset>SavageWorlds</ruleset>
+	</properties>
+	<base>
+		<script name="Tests" file="Tests/main.lua" />
+		<includefile source="Tests/ct_host_extension.xml" />
+		<includefile source="Tests/ct_pending_test_template.xml" />
+	</base>
+</root>
