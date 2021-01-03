@@ -1,6 +1,6 @@
 <root version="3.0">
 	<properties>
-	<name>Tests</name>
+	<name>Fast Tests</name>
 	<version>0.00</version>
 	
 	<author>Wilhelm Neubert</author>
@@ -8,8 +8,9 @@
 	<ruleset>SavageWorlds</ruleset>
 	</properties>
 	<base>
-		<script name="Tests" file="Tests/main.lua" />
-		<includefile source="Tests/ct_host_extension.xml" />
-		<includefile source="Tests/ct_pending_test_template.xml" />
+		<script name="FastTests" file="FastTests/main.lua" />
+		<includefile source="FastTests/ct_host_extension.xml" />
+		<includefile source="FastTests/ct_pending_test_template.xml" />
+		<includefile source="FastTests/strings.xml" />
 	</base>
 </root>

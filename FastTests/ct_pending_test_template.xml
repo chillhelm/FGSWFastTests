@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+	Please see the license.html file included with this distribution for
+	attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="combattracker_pendingtest">
+		<margins control="0,7,0,7" />
+		<frame>ct_subgroupbox</frame>
+		<script file="FastTests/scripts/ct_pending_tests_entry.lua" />
+		<sheetdata>
+			<genericcontrol name="rowanchor">
+				<anchored position="insidetop" height="0" />
+				<invisible />
+			</genericcontrol>
+
+			<!-- Description -->
+			<hs name="attackertype" />
+			<hs name="attackernodename" />
+			<hs name="attacknodename" />
+            <hs name="defendattribute" />
+            <hn name="resultVulnerable" />
+            <hn name="resultDistracted" />
+            <hn name="maybeshaken" />
+			<pendingresult_rowanchor name="descriptionrow">
+				<anchored height="30" />
+			</pendingresult_rowanchor>
+			<simplestring name="attackdescription">
+				<anchored height="25">
+					<top parent="descriptionrow" offset="5" />
+					<left offset="10" />
+					<right offset="-10" />
+				</anchored>
+				<font>sheetlabel</font>
+				<readonly />
+			</simplestring>
+
+			<!-- Pending attack -->
+			<hn name="attackresult" />
+			<pendingresult_rowanchor name="attackrow" />
+
+			<pendingattack_number name="targetvalue">
+				<anchored>
+					<left parent="attackrow" anchor="right" relation="relative" offset="60" />
+				</anchored>
+			</pendingattack_number>
+			<pendingresult_label name="attackscore_label">
+				<anchored to="targetvalue" />
+				<static textres="common_attack" />
+			</pendingresult_label>
+
+			<label name="defencescore_label">
+				<anchored>
+					<left parent="attackrow" anchor="right" relation="relative" offset="12" />
+                    <top parent="attackscore_label" />
+				</anchored>
+				<static textres="fasttests_defence" />
+                <font>sheettext</font>
+			</label>
+            <button_text name="defendbutton">
+                <anchored width="80" height="17">
+                    <left parent="attackrow" anchor="right" relation="relative" offset="8" />
+					<bottom parent="rowanchor" anchor="bottom" relation="current" offset="-13" />
+                </anchored>
+                <script>
+                    function onButtonPress()
+                        FastTests.makeDefendRoll(window.getDatabaseNode())
+                    end
+                </script>
+            </button_text>
+            <pendingattack_number name="defencescore">
+				<anchored>
+					<left parent="attackrow" anchor="right" relation="relative" offset="8" />
+                    <top parent="targetvalue" offset="0" />
+				</anchored>
+            </pendingattack_number>
+
+            <genericcontrol name="dischoice">
+                <script>
+                    function onClickDown()
+                        window.toggleDisChoice()
+                    end
+                </script>
+                <icon>poll_empty</icon>
+                <anchored width="10">
+                    <left parent="attackrow" anchor="right" relation="relative" offset="5"/>
+                    <top  parent="defencescore_label" />
+                    <bottom parent="defencescore_label" />
+                </anchored>
+            </genericcontrol>
+            <label name="dis_label">
+                <static textres="fasttests_distracted_label"/>
+                <anchored>
+                    <left parent="attackrow" anchor="right" relation="relative" offset="5"/>
+                    <top  parent="defencescore_label" />
+                </anchored>
+            </label>
+            <genericcontrol name="vulchoice">
+                <script>
+                    function onClickDown()
+                        window.toggleVulChoice()
+                    end
+                </script>
+                <icon>poll_empty</icon>
+                <anchored width="10">
+                    <left parent="attackrow" anchor="right" relation="relative" offset="5"/>
+                    <top  parent="defencescore_label" />
+                    <bottom parent="defencescore_label" />
+                </anchored>
+            </genericcontrol>
+            <label name="vul_label">
+                <static textres="fasttests_vulnerable_label"/>
+                <anchored>
+                    <left parent="attackrow" anchor="right" relation="relative" offset="5"/>
+                    <top  parent="defencescore_label" />
+                </anchored>
+            </label>
+            <basicstring name="ccresultkeyword">
+                <anchored>
+                            <!--<left parent="attackdescription" anchor="right" relation="relative" offset="5"/>-->
+                    <left parent="defencescore" anchor="right" offset="10" />
+                    <bottom parent="defencescore" anchor="top" offset="5" />
+                </anchored>
+				<font>sheetlabel</font>
+                <invisible />
+            </basicstring>
+			<pendingattack_icon name="shaken">
+				<anchored>
+					<left parent="attackrow" anchor="right" relation="relative" offset="5" />
+				</anchored>
+				<icon>state_shaken</icon>
+			</pendingattack_icon>
+            <genericcontrol name="maybeshaken_icon">
+                <script>
+                    function onClickDown()
+                        window.toggleMaybeShaken()
+                    end
+                </script>
+                <anchored width="32" height="32">
+                    <top parent="attackrow" />
+                    <left parent="attackrow" anchor="right" relation="relative" offset="5" />
+                </anchored>
+                <invisible />
+                <icon>state_shaken</icon>
+            </genericcontrol>
+            <label name="noeffectindicator">
+                <anchored>
+                    <left parent="attackrow" anchor="right" relation="relative" offset="5" />
+                    <top parent="defencescore_label" />
+                </anchored>
+                <static textres="fasttests_noeffect"></static>
+            </label>
+			<button_text name="apply">
+				<anchored width="35" height="17">
+					<right offset="-40" />
+					<bottom parent="rowanchor" anchor="bottom" relation="current" offset="-13" />
+				</anchored>
+				<state textres="button_apply" />
+				<script>
+					function onButtonPress()
+						window.applyTestResult()
+					end
+				</script>
+			</button_text>
+			<buttoncontrol name="deletebutton">
+				<anchored width="19" height="20">
+					<right offset="-10" />
+					<bottom parent="rowanchor" anchor="bottom" relation="current" offset="-11" />
+				</anchored>
+				<icon normal="button_clear" pressed="button_clear_down" />
+				<tooltip textres="ct_pendingattack_toolip_clear" />
+				<script>
+					function onButtonPress()
+						window.removeEntry()
+					end
+				</script>
+			</buttoncontrol>
+		</sheetdata>
+	</windowclass>
+</root>

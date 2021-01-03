@@ -1,0 +1,8 @@
+<root>
+  <string name="fasttests_noeffect">No Effect</string>
+  <string name="fasttests_distracted_label">Dis</string>
+  <string name="fasttests_vulnerable_label">Vul</string>
+  <string name="fasttests_defence">Defence</string>
+  <string name="option_label_FTCC">Creative Combat</string>
+  <string name="option_label_FTARTD">Auto-roll: Test Defence</string>
+</root>

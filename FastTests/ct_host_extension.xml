@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root>
+    <windowclass name="combatant" merge="join">
+        <sheetdata>
+        <ct_section name="pendingtestsection">
+            <anchored>
+                <top offset="10" />
+            </anchored>
+            <icon>action_roll</icon>
+        </ct_section>
+        <windowlist name="pendingtest">
+            <anchored>
+                <left parent="pendingtestsection" anchor="right" />
+                <top parent="damages" anchor="bottom" relation="relative" offset="-35" />
+                <right offset="-7" />
+            </anchored>
+            <class>combattracker_pendingtest</class>
+            <datasource>.pendingtests</datasource>
+            <script file="FastTests/scripts/ct_pendingtests.lua" />
+        </windowlist>
+    </sheetdata>
+    </windowclass>
+	<windowclass name="client_ct_entry" merge="join">
+        <sheetdata>
+            <ct_section name="pendingtestsection">
+                <anchored>
+                    <top offset="10" />
+                </anchored>
+                <icon>action_roll</icon>
+            </ct_section>
+            <windowlist name="pendingtest">
+                <anchored>
+                    <left parent="pendingtestsection" anchor="right" />
+                    <top parent="damages" anchor="bottom" relation="relative" offset="-35" />
+                    <right offset="-7" />
+                </anchored>
+                <class>combattracker_pendingtest</class>
+                <datasource>.pendingtests</datasource>
+                <script file="FastTests/scripts/ct_pendingtests.lua" />
+            </windowlist>
+        </sheetdata>
+    </windowclass>
+</root>
+
