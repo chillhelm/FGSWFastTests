@@ -36,8 +36,8 @@ function onInit()
 
     if not(User.isHost() or User.isLocal()) then
         apply.setVisible(false)
-        targetvalue.setReadOnly()
-        defencescore.setReadOnly()
+        targetvalue.setReadOnly(true)
+        defencescore.setReadOnly(true)
         defendbutton.setVisible(false)
         deletebutton.setVisible(false)
         ccresultkeyword.setReadOnly(true)
