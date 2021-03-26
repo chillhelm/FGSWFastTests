@@ -359,7 +359,7 @@ end
 function isAgressorWC(nodePendingTest)
     local nodeAgressor = DB.findNode(DB.getValue(nodePendingTest,"attackernodename"))
     local rAgressor = ActorManager.resolveActor(nodeAgressor)
-    if rAgressor.sType == "pc" then
+    if (rAgressor.sType == "pc")  or (rAgressor.sType == "charsheet") then
         return true
     elseif rAgressor.sType == "npc" then
         if rAgressor.sCTNode then
