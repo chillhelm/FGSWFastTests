@@ -81,10 +81,19 @@ function onSuccessfulTestInitiation(rMessage)
                 local nodeAttackDie = DB.findNode(rMessage.sAttackSkillNode)
                 local nodeAttack = nodeAttackDie and nodeAttackDie.getParent() or nil
 
+                local bAgressorIsWc = false
+                if rSource.sCTNode then
+                    local nodeCTNode = DB.findNode(rSource.sCTNode)
+                    bAgressorIsWC = DB.getValue(nodeCTNode,"wildcard",0)==1
+                elseif rSource.sCreatureNode then
+                    local nodeCreature = DB.findNode(rSource.sCreatureNode)
+                    bAgressorIsWC = DB.getValue(nodeCreature, "wildcard", 0)==1
+                end
                 DB.setValue(nodeNewPendingTest, "targetvalue","number",rMessage.nAttackValue)
                 DB.setValue(nodeNewPendingTest, "defendattribute","string",rMessage.sDefendAttribute)
                 DB.setValue(nodeNewPendingTest, "attackertype","string",rSource.sType)
                 DB.setValue(nodeNewPendingTest, "attackernodename","string",rSource.sCreatureNode)
+                DB.setValue(nodeNewPendingTest, "attackerWC", "number", bAgressorIsWC and 1 or 0)
                 DB.setValue(nodeNewPendingTest, "attacknodename","string", nodeAttack and nodeAttack.getPath() or "")
                 DB.setValue(nodeNewPendingTest, "resultVulnerable","number",0)
                 DB.setValue(nodeNewPendingTest, "resultDistracted","number",0)
@@ -357,22 +366,8 @@ function onTableRolled(rRoll, rSource, rTargets)
 end
 
 function isAgressorWC(nodePendingTest)
-    local nodeAgressor = DB.findNode(DB.getValue(nodePendingTest,"attackernodename"))
-    local rAgressor = ActorManager.resolveActor(nodeAgressor)
-    if (rAgressor.sType == "pc")  or (rAgressor.sType == "charsheet") then
-        return true
-    elseif rAgressor.sType == "npc" then
-        if rAgressor.sCTNode then
-            local nodeCTNode = DB.findNode(rAgressor.sCTNode)
-            local bIsWC = DB.getValue(nodeCTNode,"wildcard",0)==1
-            return bIsWC
-        elseif rAgressor.sCreatureNode then
-            local nodeCreature = DB.findNode(rAgressor.sCreatureNode)
-            local bIsWC = DB.getValue(nodeCreature, "wildcard", 0)==1
-            return bIsWC
-        end
-    end
-    return false
+    local bAgressorIsWC = DB.getValue(nodePendingTest, "attackerWC", 0) == 1
+    return bAgressorIsWC
 end
 
 function getAgressorBennyPool(nodePendingTest)
