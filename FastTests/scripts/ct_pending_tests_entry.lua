@@ -242,13 +242,18 @@ function updateDefenceDescription()
     else
         return
     end
-    aDie = TraitManager.getTraitNode("ct", getCombatantNode(), StringManager.simplify(sAttr)).getValue()
+    nodeTraitNode = TraitManager.getTraitNode("ct", getCombatantNode(), StringManager.simplify(sAttr))
+    if nodeTraitNode then
+        aDie = TraitManager.getTraitNode("ct", getCombatantNode(), StringManager.simplify(sAttr)).getValue()
+    else
+        aDie = nil
+    end
     if not aDie then
         defendbutton.setText(sDesc)
-        return
+    else
+        sDesc = sDesc .. " [" .. aDie[1] .."]"
+        defendbutton.setText(sDesc)
     end
-    sDesc = sDesc .. " [" .. aDie[1] .."]"
-    defendbutton.setText(sDesc)
 end
 
 function toggleDisChoice()

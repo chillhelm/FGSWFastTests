@@ -31,7 +31,6 @@
 				<anchored height="25">
 					<top parent="descriptionrow" offset="5" />
 					<left offset="10" />
-					<right offset="-10" />
 				</anchored>
 				<font>sheetlabel</font>
 				<readonly />
@@ -47,22 +46,16 @@
 				</anchored>
 			</pendingattack_number>
 			<pendingresult_label name="attackscore_label">
-				<anchored to="targetvalue" />
+				<anchored to="targetvalue" position="above">
+                </anchored>
 				<static textres="common_attack" />
 			</pendingresult_label>
 
-			<label name="defencescore_label">
-				<anchored>
-					<left parent="attackrow" anchor="right" relation="relative" offset="12" />
-                    <top parent="attackscore_label" />
-				</anchored>
-				<static textres="fasttests_defence" />
-                <font>sheettext</font>
-			</label>
             <button_text name="defendbutton">
-                <anchored width="80" height="17">
-                    <left parent="attackrow" anchor="right" relation="relative" offset="8" />
-					<bottom parent="rowanchor" anchor="bottom" relation="current" offset="-13" />
+                <anchored width="80">
+                    <left parent="attackdescription" anchor="right" relation="relative" offset="20" />
+					<bottom parent="attackdescription" anchor="bottom" relation="current" offset="-4"/>
+					<top parent="attackdescription" anchor="top" relation="current" offset="4"/>
                 </anchored>
                 <script>
                     function onButtonPress()
@@ -76,6 +69,11 @@
                     <top parent="targetvalue" offset="0" />
 				</anchored>
             </pendingattack_number>
+			<pendingresult_label name="defencescore_label">
+                <anchored to="defencescore" position="above"/>
+				<static textres="fasttests_defence" />
+                <font>sheettext</font>
+			</pendingresult_label>
 
             <genericcontrol name="dischoice">
                 <script>
@@ -86,17 +84,19 @@
                 <icon>poll_empty</icon>
                 <anchored width="10">
                     <left parent="attackrow" anchor="right" relation="relative" offset="5"/>
-                    <top  parent="defencescore_label" />
-                    <bottom parent="defencescore_label" />
+                    <top  parent="defencescore" />
+                    <bottom parent="defencescore" />
                 </anchored>
             </genericcontrol>
-            <label name="dis_label">
+            <pendingresult_label name="dis_label">
                 <static textres="fasttests_distracted_label"/>
                 <anchored>
                     <left parent="attackrow" anchor="right" relation="relative" offset="5"/>
-                    <top  parent="defencescore_label" />
+                    <top  parent="defencescore" />
+                    <bottom parent="defencescore" />
                 </anchored>
-            </label>
+                <font>sheetlabel</font>
+            </pendingresult_label>
             <genericcontrol name="vulchoice">
                 <script>
                     function onClickDown()
@@ -106,29 +106,33 @@
                 <icon>poll_empty</icon>
                 <anchored width="10">
                     <left parent="attackrow" anchor="right" relation="relative" offset="5"/>
-                    <top  parent="defencescore_label" />
-                    <bottom parent="defencescore_label" />
+                    <top  parent="defencescore" />
+                    <bottom parent="defencescore" />
                 </anchored>
             </genericcontrol>
-            <label name="vul_label">
+            <pendingresult_label name="vul_label">
                 <static textres="fasttests_vulnerable_label"/>
                 <anchored>
                     <left parent="attackrow" anchor="right" relation="relative" offset="5"/>
-                    <top  parent="defencescore_label" />
+                    <top  parent="defencescore" />
+                    <bottom parent="defencescore" />
                 </anchored>
-            </label>
+                <font>sheetlabel</font>
+            </pendingresult_label>
             <basicstring name="ccresultkeyword">
                 <anchored>
                             <!--<left parent="attackdescription" anchor="right" relation="relative" offset="5"/>-->
-                    <left parent="defencescore" anchor="right" offset="10" />
-                    <bottom parent="defencescore" anchor="top" offset="5" />
+                    <left parent="defencescore_label" anchor="right" offset="10" />
+                    <bottom parent="defencescore_label" anchor="bottom"/>
                 </anchored>
 				<font>sheetlabel</font>
+                <readonly />
                 <invisible />
             </basicstring>
 			<pendingattack_icon name="shaken">
-				<anchored>
-					<left parent="attackrow" anchor="right" relation="relative" offset="5" />
+                <anchored width="32" height="32">
+					<left parent="vul_label" anchor="right" relation="relative" offset="5" />
+                    <top parent="defencescore"/>
 				</anchored>
 				<icon>state_shaken</icon>
 			</pendingattack_icon>
@@ -139,8 +143,8 @@
                     end
                 </script>
                 <anchored width="32" height="32">
-                    <top parent="attackrow" />
-                    <left parent="attackrow" anchor="right" relation="relative" offset="5" />
+					<left parent="vul_label" anchor="right" relation="relative" offset="5" />
+                    <top parent="defencescore"/>
                 </anchored>
                 <invisible />
                 <icon>state_shaken</icon>
@@ -148,14 +152,14 @@
             <label name="noeffectindicator">
                 <anchored>
                     <left parent="attackrow" anchor="right" relation="relative" offset="5" />
-                    <top parent="defencescore_label" />
+                    <top parent="defencescore" />
                 </anchored>
                 <static textres="fasttests_noeffect"></static>
             </label>
 			<button_text name="apply">
 				<anchored width="35" height="17">
 					<right offset="-40" />
-					<bottom parent="rowanchor" anchor="bottom" relation="current" offset="-13" />
+					<bottom parent="rowanchor" anchor="bottom" relation="current" offset="-9" />
 				</anchored>
 				<state textres="button_apply" />
 				<script>
@@ -167,7 +171,7 @@
 			<buttoncontrol name="deletebutton">
 				<anchored width="19" height="20">
 					<right offset="-10" />
-					<bottom parent="rowanchor" anchor="bottom" relation="current" offset="-11" />
+					<bottom parent="rowanchor" anchor="bottom" relation="current" offset="-7" />
 				</anchored>
 				<icon normal="button_clear" pressed="button_clear_down" />
 				<tooltip textres="ct_pendingattack_toolip_clear" />
