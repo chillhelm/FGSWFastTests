@@ -32,7 +32,7 @@ function testTraitResolutionSubHandler(rRoll, vRollResult, rSource, vTargets, rC
     if (rRoll.rCustom.attacknode ~= nil) then
         return
     end
-    if not string.find(rRoll.rCustom.nodename,"skills") then
+    if (not rRoll.rCustom.nodename) or (not string.find(rRoll.rCustom.nodename,"skills")) then
         return
     end
     local targets=vTargets
