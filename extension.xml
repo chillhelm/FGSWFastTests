@@ -7,7 +7,7 @@
 	<description>Basic Tests for Savage Worlds</description>
     <ruleset><name>SavageWorlds</name></ruleset>
     <ruleset>
-        <name>PFSW</name>
+        <name>SWPF</name>
     </ruleset>
     <ruleset>
         <name>SWD</name>
