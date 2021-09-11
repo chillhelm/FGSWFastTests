@@ -6,11 +6,9 @@
 	<author>Wilhelm Neubert</author>
 	<description>Basic Tests for Savage Worlds</description>
     <ruleset><name>SavageWorlds</name></ruleset>
+    <ruleset><name>SWADE</name></ruleset>
     <ruleset>
         <name>SWPF</name>
-    </ruleset>
-    <ruleset>
-        <name>SWD</name>
     </ruleset>
 	</properties>
 	<base>
