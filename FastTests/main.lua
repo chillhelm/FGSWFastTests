@@ -109,7 +109,7 @@ function onSuccessfulTestInitiation(rMessage)
 end
 
 function testDefenceRollHandler(sActorType, nodeActor, sTraitType, rUserData, draginfo)
-    ModifierManager.applyEffectModifierOnEntity(sActorType, nodeActor, "testdefence")
+    ModifierManagerSW.applyEffectModifierOnEntity(sActorType, nodeActor, "testdefence")
     local sDescPrefix = "Test Defence Roll"
     local sAttr = DB.getValue(DB.findNode(rUserData.sPendingTest),"defendattribute","agility")
     sAttr = StringManager.simplify(sAttr)
