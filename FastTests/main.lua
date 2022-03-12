@@ -234,7 +234,7 @@ function applyPendingTest(nodePendingTest)
     if nResult >= 1 then
         local bDistracted = DB.getValue(nodePendingTest, "resultDistracted", 0)==1
         local bVulnerable = DB.getValue(nodePendingTest, "resultVulnerable", 0)==1
-        local rActor = ActorManager.getActorFromCT(nodeVictim)
+        local rActor = ActorManager.resolveActor(nodeVictim)
         if(bDistracted) then
             local rEffect = ActionEffect.distractedEffect()
             ActionEffect.applyEffect(rActor, rActor, rEffect)
