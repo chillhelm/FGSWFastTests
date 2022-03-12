@@ -236,18 +236,20 @@ function updateDefenceDescription()
     if not FastTests.isUserAllowedToRollForThisCharacter(getDatabaseNode().getParent().getParent()) then
         return
     end
-    sAttr = DB.getValue(getDatabaseNode(),"defendattribute",nil)
+    local sAttr = DB.getValue(getDatabaseNode(),"defendattribute",nil)
     if sAttr then
         sDesc = sAttr
     else
         return
     end
-    nodeTraitNode = TraitManager.getTraitNode("ct", getCombatantNode(), StringManager.simplify(sAttr))
-    if nodeTraitNode then
-        aDie = TraitManager.getTraitNode("ct", getCombatantNode(), StringManager.simplify(sAttr)).getValue()
+    local _,nodeChar = CharacterManager.asCharActor("ct", getDatabaseNode().getParent().getParent())
+    local nodeTraitNode = nil
+    if AttributeManager.isAttribute(sAttr) then
+        nodeTraitNode = AttributeManager.getAttributeNode(nodeChar, sAttr)
     else
-        aDie = nil
+        nodeTraitNode = SkillManager.getSkillNode(nodeChar, sAttr, false)
     end
+    local aDie = nodeTraitNode.getValue()
     if not aDie then
         defendbutton.setText(sDesc)
     else
@@ -303,3 +305,18 @@ function toggleMaybeShaken()
     end
 end
 
+function updateDefendTrait(sTrait)
+    if User.isHost() or User.isLocal() then
+        if sTrait then
+            DB.setValue(getDatabaseNode(),"defendattribute","string",sTrait)
+        end
+    else
+        if FastTests.isUserAgressorForThisTest(getDatabaseNode()) then
+            sendOOBMessage = {["type"] = FastTests.OOB_MESSAGE_TYPE_TEST_UPDATE_DEFEND_TRAIT,
+                              ["sPendingTestPath"] = getDatabaseNode().getPath(),
+                              ["sTrait"] = sTrait}
+            Comm.deliverOOBMessage(sendOOBMessage)
+        end
+    end
+    updateDefenceDescription()
+end

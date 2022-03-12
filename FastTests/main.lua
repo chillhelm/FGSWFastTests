@@ -5,6 +5,7 @@ OOB_MESSAGE_TYPE_TEST_TOGGLE_VUL="TEST_EXT_TOGGLE_VUL"
 OOB_MESSAGE_TYPE_TEST_NEW_PENDING_TEST="TEST_EXT_NEW_PENDING_TEST"
 OOB_MESSAGE_TYPE_TEST_CCTABLE_ROLLED="TEST_EXT_CCTABLE_ROLLED"
 OOB_MESSAGE_TYPE_TEST_CCROLL_REQUEST="TEST_EXT_CCROLL_REQUEST"
+OOB_MESSAGE_TYPE_TEST_UPDATE_DEFEND_TRAIT="TEST_EXT_UPDATE_DEFEND_TRAIT"
 sTestDefence = "testdefence"
 
 function onInit()
@@ -19,6 +20,7 @@ function onInit()
         OOBManager.registerOOBMsgHandler(OOB_MESSAGE_TYPE_TEST_TOGGLE_VUL, onToggleVul)
         OOBManager.registerOOBMsgHandler(OOB_MESSAGE_TYPE_TEST_INITIATION_SUCCESS, onSuccessfulTestInitiation)
         OOBManager.registerOOBMsgHandler(OOB_MESSAGE_TYPE_TEST_CCTABLE_ROLLED, onCCTableRollCompleted)
+        OOBManager.registerOOBMsgHandler(OOB_MESSAGE_TYPE_TEST_UPDATE_DEFEND_TRAIT, onUpdateDefendTrait)
     end
     OOBManager.registerOOBMsgHandler(OOB_MESSAGE_TYPE_TEST_CCROLL_REQUEST, onCCRollRequest)
     OptionsManager.registerOption2("FTCC", false, "option_header_setting", "option_label_FTCC", "option_entry_cycler",
@@ -109,11 +111,20 @@ function onSuccessfulTestInitiation(rMessage)
 end
 
 function testDefenceRollHandler(sActorType, nodeActor, sTraitType, rUserData, draginfo)
+    local _,nodeChar = CharacterManager.asCharActor(sActorType, nodeActor)
     ModifierManagerSW.applyEffectModifierOnEntity(sActorType, nodeActor, "testdefence")
     local sDescPrefix = "Test Defence Roll"
     local sAttr = DB.getValue(DB.findNode(rUserData.sPendingTest),"defendattribute","agility")
+    if rUserData.sDefendTraitOverride then
+        sAttr = rUserData.sDefendTraitOverride
+    end
     sAttr = StringManager.simplify(sAttr)
-    local nodeTrait = TraitManager.getTraitNode(sActorType, nodeActor, sAttr)
+    local nodeTrait = nil
+    if AttributeManager.isAttribute(sAttr) then
+        nodeTrait = AttributeManager.getAttributeNode(nodeChar, sAttr)
+    else
+        nodeTrait = SkillManager.getSkillNode(nodeChar, sAttr, false)
+    end
     TraitManager.rollPreDefinedRoll(sActorType, nodeActor, nodeTrait, sDescPrefix, sTraitType, rUserData, draginfo)
 end
 
@@ -141,12 +152,15 @@ function isUserBossOfCTEntry(nodeCT)
     return false
 end
 
-function makeDefendRoll(pendingTestNode)
+function makeDefendRoll(pendingTestNode, sDefendTrait)
     local nodeCharacterCT= pendingTestNode.getParent().getParent()
     if not isUserAllowedToRollForThisCharacter(nodeCharacterCT) then
         return
     end
     local rUserData = {sPendingTest=pendingTestNode.getPath()}
+    if sDefendTrait then
+        rUserData.sDefendTraitOverride = sDefendTrait
+    end
     TraitManager.makeTraitRoll("ct", nodeCharacterCT, sTestDefence, rUserData)
 end
 
@@ -483,4 +497,10 @@ function onCCRollRequest(rData)
     local nodeAgressor = DB.findNode(sAgressorNode)
     local rActor = ActorManager.resolveActor(nodeAgressor)
     FastTests.makeCreativeCombatTableRoll(rActor, nodePendingTest)
+end
+
+function onUpdateDefendTrait(rData)
+    local nodePendingTest = DB.findNode(rData.sPendingTestPath)
+    local sTrait = rData.sTrait
+    DB.setValue(nodePendingTest,"defendattribute","string",sTrait)
 end
