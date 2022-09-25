@@ -152,7 +152,7 @@ function isUserBossOfCTEntry(nodeCT)
     return false
 end
 
-function makeDefendRoll(pendingTestNode, sDefendTrait)
+function makeDefendRoll(pendingTestNode, sDefendTrait, bReroll)
     local nodeCharacterCT= pendingTestNode.getParent().getParent()
     if not isUserAllowedToRollForThisCharacter(nodeCharacterCT) then
         return
@@ -160,6 +160,10 @@ function makeDefendRoll(pendingTestNode, sDefendTrait)
     local rUserData = {sPendingTest=pendingTestNode.getPath()}
     if sDefendTrait then
         rUserData.sDefendTraitOverride = sDefendTrait
+    end
+    if bReroll then
+        rUserData.reroll = true
+        ModifierManagerSW.applyTraitModifiers("ct", nodeCharacterCT, "reroll")
     end
     TraitManager.makeTraitRoll("ct", nodeCharacterCT, sTestDefence, rUserData)
 end
@@ -169,8 +173,10 @@ function testDefenceResolutionSubHandler(rRoll, rRollResult, rSource, vTargets, 
 
     local sendMessage = {["type"]=OOB_MESSAGE_TYPE_TEST_DEFENCE_ROLL_COMPLETED, 
                         nDefenceResult=rRollResult.nTotalScore,
-                        bCritFail = rRollResult.bCritFail or false,
                         sPendingTest = rUserData.sPendingTest}
+
+    sendMessage.bCritFail = tostring(rRollResult.bCriticalFailure or false)
+    sendMessage.bReroll = tostring(rRoll.rCustom.reroll or false)
     Comm.deliverOOBMessage(sendMessage)
 end
 
@@ -180,9 +186,13 @@ function onTestDefenceRollCompleted(data)
     end
     nodePendingTest = DB.findNode(data.sPendingTest)
     if nodePendingTest then
-        DB.setValue(nodePendingTest, "defencescore", "number", data.nDefenceResult)
-        DB.setValue(nodePendingTest, "defencecritfail", "number", data.bCritFail and 1 or 0)
-        DB.setValue(nodePendingTest, "defencerolled", "number", 1)
+        local nOldResult = DB.getValue(nodePendingTest, "defencescore",0)
+        local bOldCritFail = DB.getValue(nodePendingTest, "defencecritfail",0) == 1
+        if (data.bCritFail=="true" or ((not bOldCritFail) and nOldResult<tonumber(data.nDefenceResult))) then
+            DB.setValue(nodePendingTest, "defencescore", "number", data.nDefenceResult)
+            DB.setValue(nodePendingTest, "defencecritfail", "number", data.bCritFail=="true" and 1 or 0)
+            DB.setValue(nodePendingTest, "defencerolled", "number", 1)
+        end
     end
 end
 
@@ -340,10 +350,13 @@ function makeCreativeCombatTableRoll(rActor, nodePendingTest)
 	rRoll.aDice = DB.getValue(nodeTable,"dice", {})
 	rRoll.nMod = 0
 	rRoll.bApplyModifiersStack = false
+    rRoll.nColumn = 0
 	rRoll.sNodeTable = nodeTable.getNodeName()
+    rRoll.nodeTable = nodeTable
 	rRoll.sPendingTest = nodePendingTest.getPath()
-	TableManager.prepareTableDice(rRoll)
-	ActionsManager.performAction(nil, rActor, rRoll)
+    rActor.sPendingTest = nodePendingTest.getPath()
+	ActionsManager.performAction(nil, rActor, rRoll);
+    --TableManager.performRoll(nil, rActor,rRoll, false)
 end
 
 function onCreativeCombatTableRolled(rRoll, rSource, rTargets)

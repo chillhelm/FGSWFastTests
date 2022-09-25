@@ -77,7 +77,7 @@
                             rActor["recordname"]=DB.findNode(bennySource).getParent().getParent().getPath()
                           end
                           BennyManager.consumeBennyToReRoll(rActor, dragdata.getStringData())
-                          FastTests.makeDefendRoll(window.getDatabaseNode())
+                          FastTests.makeDefendRoll(window.getDatabaseNode(),nil, true)
                           return true
                         end
                       end
@@ -88,6 +88,28 @@
 					<left parent="attackrow" anchor="right" relation="relative" offset="8" />
                     <top parent="targetvalue" offset="0" />
 				</anchored>
+                <script>
+                      function onDrop(x,y,dragdata)
+                        if dragdata.getType() == "traitdice" then
+                            window.updateDefendTrait(dragdata.getStringData())
+                            FastTests.makeDefendRoll(window.getDatabaseNode(),dragdata.getStringData())
+                            return true
+                        end
+                        if dragdata.getType() == "benny" then
+                          local bennySource = dragdata.getStringData()
+                          local actor = dragdata.getDescription()
+                          rActor={}
+                          if actor == "GM" then
+                            rActor["recordname"]="GM"
+                          else
+                            rActor["recordname"]=DB.findNode(bennySource).getParent().getParent().getPath()
+                          end
+                          BennyManager.consumeBennyToReRoll(rActor, dragdata.getStringData())
+                          FastTests.makeDefendRoll(window.getDatabaseNode(),nil, true)
+                          return true
+                        end
+                      end
+                </script>
             </pendingattack_number>
 			<pendingresult_label name="defencescore_label">
                 <anchored to="defencescore" position="above"/>
