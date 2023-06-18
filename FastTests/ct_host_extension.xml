@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <root>
-    <windowclass name="combatant" merge="join">
+    <windowclass name="ct_entry" merge="join">
         <sheetdata>
         <ct_section name="pendingtestsection">
             <anchored>
