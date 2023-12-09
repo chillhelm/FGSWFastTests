@@ -34,7 +34,7 @@ function onInit()
 
 	updateMenuItems()
 
-    if not(User.isHost() or User.isLocal()) then
+    if not(Session.isHost or Session.isLocal) then
         apply.setVisible(false)
         targetvalue.setReadOnly(true)
         defencescore.setReadOnly(true)
@@ -109,7 +109,7 @@ function updateAttackResult()
             showCCResultKeyword()
             local sCCResultKeyword = DB.getValue(getDatabaseNode(),"ccresultkeyword")
             if (not sCCResultKeyword) or sCCResultKeyword=="" then
-                if User.isHost() or User.isLocal() then
+                if Session.isHost or Session.isLocal then
                     if DB.getValue(getDatabaseNode(), "ccrollrequested", 0) == 0 then
                         DB.setValue(getDatabaseNode(),"ccrollrequested","number",1)
                         FastTests.requestCCRoll(getDatabaseNode())
@@ -299,14 +299,14 @@ function updateMaybeShakenIcon()
 end
 
 function toggleMaybeShaken()
-    if User.isLocal() or User.isHost() then
+    if Session.isLocal or Session.isHost then
         DB.setValue(getDatabaseNode(),"maybeshaken","number",
             1 - DB.getValue(getDatabaseNode(),"maybeshaken",0))
     end
 end
 
 function updateDefendTrait(sTrait)
-    if User.isHost() or User.isLocal() then
+    if Session.isHost or Session.isLocal then
         if sTrait then
             DB.setValue(getDatabaseNode(),"defendattribute","string",sTrait)
         end

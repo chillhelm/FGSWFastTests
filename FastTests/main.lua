@@ -14,7 +14,7 @@ function onInit()
     RollsManager.registerTraitResolutionSubHandler("testdefence", testDefenceResolutionSubHandler)
     TraitManager.registerTraitRoll(sTestDefence,testDefenceRollHandler)
 
-    if User.isHost() or User.isLocal() then
+    if Session.IsHost or Session.IsLocal then
         OOBManager.registerOOBMsgHandler(OOB_MESSAGE_TYPE_TEST_DEFENCE_ROLL_COMPLETED, onTestDefenceRollCompleted)
         OOBManager.registerOOBMsgHandler(OOB_MESSAGE_TYPE_TEST_TOGGLE_DIS, onToggleDis)
         OOBManager.registerOOBMsgHandler(OOB_MESSAGE_TYPE_TEST_TOGGLE_VUL, onToggleVul)
@@ -70,7 +70,7 @@ function testTraitResolutionSubHandler(rRoll, vRollResult, rSource, vTargets, rC
 end
 
 function onSuccessfulTestInitiation(rMessage)
-    if (User.isHost() or User.isLocal()) then -- Host takes care of this, clients: No Touching
+    if (Session.IsHost or Session.IsLocal) then -- Host takes care of this, clients: No Touching
         vTargets={}
         vTargets = StringManager.convertStringToTable(rMessage.vTargets)
         rSource=StringManager.convertStringToTable(rMessage.rSource)
@@ -181,7 +181,7 @@ function testDefenceResolutionSubHandler(rRoll, rRollResult, rSource, vTargets, 
 end
 
 function onTestDefenceRollCompleted(data)
-    if not (User.isHost() or User.isLocal()) then -- Host takes care of this, clients: No Touching
+    if not (Session.IsHost or Session.IsLocal) then -- Host takes care of this, clients: No Touching
         return
     end
     nodePendingTest = DB.findNode(data.sPendingTest)
@@ -303,7 +303,7 @@ function onNewPendingTest(rData)
         if not (sFTARTD == "npconly" or sFTARTD == "all") then -- roll automation is off for NPCs
             return
         end
-        if User.isHost() or User.isLocal() then -- GM only section
+        if Session.IsHost or Session.IsLocal then -- GM only section
             makeDefendRoll(nodeNewPendingTest)
         end
     end
@@ -315,7 +315,7 @@ function onNewPendingTest(rData)
         if not nodeCharsheet then -- Who is this guy?
             return
         end
-        if not (User.isLocal() or User.isHost()) then -- clients roll only for their own PCs
+        if not (Session.IsLocal or Session.IsHost) then -- clients roll only for their own PCs
             if nodeCharsheet.isOwner() then
                 makeDefendRoll(nodeNewPendingTest)
             end
@@ -373,7 +373,7 @@ function onCreativeCombatTableRolled(rRoll, rSource, rTargets)
 end
 
 function onCCTableRollCompleted(rMessage)
-    if User.isHost() or User.isLocal() then
+    if Session.IsHost or Session.IsLocal then
         local nodePendingTest = DB.findNode(rMessage.sPendingTest)
         if not nodePendingTest then
             return
