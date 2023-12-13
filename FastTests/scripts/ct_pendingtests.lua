@@ -4,7 +4,7 @@
 --
 
 function onInit()
-	if Session.isHost then
+	if Session.IsHost then
 		registerMenuItem(Interface.getString("ct_menu_pendingentries_delete_all"), "logoff", 4)
 	end
 	getDatabaseNode().onChildUpdate = update
