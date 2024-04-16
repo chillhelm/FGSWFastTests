@@ -82,8 +82,8 @@ function updateAttackDescription()
 	attackdescription.setValue(sDesc)
 
 	local bVisible = StringManager.isNotBlank(sDesc)
-	descriptionrow.setVisible(bVisible) 
-	attackdescription.setVisible(bVisible) 
+	descriptionrow.setVisible(bVisible)
+	attackdescription.setVisible(bVisible)
 end
 
 --
@@ -109,12 +109,6 @@ function updateAttackResult()
             showCCResultKeyword()
             local sCCResultKeyword = DB.getValue(getDatabaseNode(),"ccresultkeyword")
             if (not sCCResultKeyword) or sCCResultKeyword=="" then
-                if Session.IsHost or Session.IsLocal then
-                    if DB.getValue(getDatabaseNode(), "ccrollrequested", 0) == 0 then
-                        DB.setValue(getDatabaseNode(),"ccrollrequested","number",1)
-                        FastTests.requestCCRoll(getDatabaseNode())
-                    end
-                end
             else
                 if sCCResultKeyword == "Shaken" then
                     showShakenIcon()
