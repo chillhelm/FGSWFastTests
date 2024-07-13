@@ -545,7 +545,7 @@ function updateTestResult(nodePendingTest)
     if nResult >= 4 then
         local sFTCC = OptionsManager.getOption("FTCC")
         if sFTCC and sFTCC == "on" and FastTests.isAgressorWC(nodePendingTest) then
-            local sCCResultKeyword = DB.getValue(getDatabaseNode(),"ccresultkeyword")
+            local sCCResultKeyword = DB.getValue(nodePendingTest,"ccresultkeyword")
             if (not sCCResultKeyword) or sCCResultKeyword=="" then
                 if Session.IsHost or Session.IsLocal then
                     if DB.getValue(nodePendingTest, "ccrollrequested", 0) == 0 then

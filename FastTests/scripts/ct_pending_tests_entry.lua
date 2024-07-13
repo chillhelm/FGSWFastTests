@@ -236,14 +236,17 @@ function updateDefenceDescription()
     else
         return
     end
-    local _,nodeChar = CharacterManager.asCharActor("ct", getDatabaseNode().getParent().getParent())
+    local sType,nodeChar = CharacterManager.asCharActor("ct", getDatabaseNode().getParent().getParent())
+    if sType == "vehicle" then
+        _, nodeChar = DB.getValue(nodeChar, "actor")
+    end
     local nodeTraitNode = nil
     if AttributeManager.isAttribute(sAttr) then
         nodeTraitNode = AttributeManager.getAttributeNode(nodeChar, sAttr)
     else
         nodeTraitNode = SkillManager.getSkillNode(nodeChar, sAttr, false)
     end
-    local aDie = nodeTraitNode.getValue()
+    local aDie = nodeTraitNode and nodeTraitNode.getValue()
     if not aDie then
         defendbutton.setText(sDesc)
     else

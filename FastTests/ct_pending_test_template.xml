@@ -55,7 +55,7 @@
 
             <button_text name="defendbutton">
                 <anchored width="80">
-                    <left parent="attackdescription" anchor="right" relation="relative" offset="20" />
+                    <left parent="attackdescription" anchor="left" relation="relative" offset="220" />
 					<top parent="attackdescription" anchor="top" relation="current" offset="4"/>
                 </anchored>
                 <script file="FastTests/scripts/testdefendbutton.lua" />
